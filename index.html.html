@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
-
-<head>
-  <meta charset="UTF-8">
+<!-- saved from url=(0093)file:///C:/Users/user/Downloads/%EB%A7%88%EB%A5%B4%EC%BD%94%EC%9D%98%EC%97%AC%EC%A0%95_1.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>마르코의 여정 – 벽을 넘어서</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="./index.html_files/css2" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -520,7 +519,7 @@
 <body>
 
   <div id="wrap">
-    <canvas id="canvas"></canvas>
+    <canvas id="canvas" width="1280" height="576"></canvas>
 
     <!-- INTRO -->
     <div class="overlay" id="s-intro">
@@ -569,16 +568,15 @@
           </div>
         </div>
 
-        <div
-          style="font-size:0.85rem; color:#94A3B8; margin-bottom:14px; background:rgba(96,165,250,0.08); border-radius:10px; padding:10px 14px; text-align:left;">
+        <div style="font-size:0.85rem; color:#94A3B8; margin-bottom:14px; background:rgba(96,165,250,0.08); border-radius:10px; padding:10px 14px; text-align:left;">
           🎁 이름을 입력하면 <strong style="color:#60A5FA">경품 추첨 결과</strong>를 바로 확인할 수 있어요!
         </div>
 
         <!-- 응모 폼 -->
         <div id="reg-form">
-          <input class="input-field" id="inp-name" placeholder="이름 *" />
-          <input class="input-field" id="inp-district" placeholder="사는 곳 * (예: 마포구)" />
-          <input class="input-field" id="inp-contact" placeholder="연락처 (선택 — 전화번호 또는 이메일)" />
+          <input class="input-field" id="inp-name" placeholder="이름 *">
+          <input class="input-field" id="inp-district" placeholder="사는 곳 * (예: 마포구)">
+          <input class="input-field" id="inp-contact" placeholder="연락처 (선택 — 전화번호 또는 이메일)">
           <div class="msg-err hidden" id="reg-err">이름과 사는 곳을 입력해주세요!</div>
           <button class="btn btn-primary" id="btn-register">🎲 추첨 결과 확인하기</button>
         </div>
@@ -590,7 +588,7 @@
           <div style="font-size:0.83rem; color:#94A3B8; margin-bottom:10px; text-align:left;">
             경품 배달을 위해 상세 주소를 입력해주세요.
           </div>
-          <input class="input-field" id="inp-delivery" placeholder="도로명 상세 주소 *" />
+          <input class="input-field" id="inp-delivery" placeholder="도로명 상세 주소 *">
           <div class="msg-err hidden" id="delivery-err">주소를 입력해주세요!</div>
           <button class="btn btn-primary" id="btn-delivery" style="margin-bottom:0;">📍 주소 제출하기</button>
           <div class="msg-ok hidden" id="delivery-ok">✅ 주소가 저장됐어요! 곧 연락드릴게요 😊</div>
@@ -613,13 +611,12 @@
     <!-- ADMIN -->
     <div class="overlay hidden" id="s-admin">
       <div class="admin-panel">
-        <h2>⚙ 관리자 설정 <button class="btn btn-secondary" id="btn-admin-close"
-            style="font-size:0.8rem; padding:6px 14px;">닫기</button></h2>
+        <h2>⚙ 관리자 설정 <button class="btn btn-secondary" id="btn-admin-close" style="font-size:0.8rem; padding:6px 14px;">닫기</button></h2>
 
         <span class="section-lbl">기본 설정</span>
         <div class="row">
           <label>당첨자 수</label>
-          <input type="number" id="cfg-winners" min="1" max="999" value="3" />
+          <input type="number" id="cfg-winners" min="1" max="999" value="3">
           <span style="font-size:0.82rem; color:#475569">명</span>
         </div>
         <div class="row">
@@ -627,13 +624,13 @@
             당첨 확률
             <span style="font-size:0.75rem; color:#475569; display:block;">당첨자 수 채워지면 자동 0%</span>
           </label>
-          <input type="number" id="cfg-prob" min="0" max="100" value="30" style="width:70px;" />
+          <input type="number" id="cfg-prob" min="0" max="100" value="30" style="width:70px;">
           <span style="font-size:0.82rem; color:#475569">%</span>
         </div>
         <div class="row" style="flex-direction:column; align-items:flex-start; gap:8px;">
           <label style="margin-bottom:0;">장벽 스타일</label>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn btn-secondary wall-style-btn" data-style="band"  id="ws-band"  style="font-size:0.8rem;padding:5px 12px;">🧱 벽돌+색띠</button>
+            <button class="btn btn-secondary wall-style-btn" data-style="band" id="ws-band" style="font-size:0.8rem;padding:5px 12px;">🧱 벽돌+색띠</button>
             <button class="btn btn-secondary wall-style-btn" data-style="solid" id="ws-solid" style="font-size:0.8rem;padding:5px 12px;">🎨 단색</button>
             <button class="btn btn-secondary wall-style-btn" data-style="brick" id="ws-brick" style="font-size:0.8rem;padding:5px 12px;">⬜ 흰 벽돌</button>
           </div>
@@ -645,8 +642,7 @@
         <div class="row" style="flex-direction:column; align-items:flex-start; gap:6px;">
           <label style="font-size:0.86rem; color:#CBD5E1;">📊 Google Sheets 연동 URL</label>
           <div style="display:flex; gap:8px; width:100%;">
-            <input type="text" id="cfg-gas-url" placeholder="Apps Script 웹앱 URL 붙여넣기"
-              style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:7px; color:white; font-family:inherit; font-size:0.8rem; outline:none;" />
+            <input type="text" id="cfg-gas-url" placeholder="Apps Script 웹앱 URL 붙여넣기" style="flex:1; padding:7px 10px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:7px; color:white; font-family:inherit; font-size:0.8rem; outline:none;">
             <button class="btn btn-secondary" id="btn-save-gas" style="font-size:0.78rem;padding:6px 10px;">저장</button>
           </div>
           <span id="gas-status" style="font-size:0.75rem; color:#475569;"></span>
@@ -654,7 +650,7 @@
 
         <div class="row">
           <label>관리자 비밀번호 변경</label>
-          <input type="password" id="cfg-pw" placeholder="새 비밀번호" />
+          <input type="password" id="cfg-pw" placeholder="새 비밀번호">
           <button class="btn btn-secondary" id="btn-save-pw" style="font-size:0.78rem; padding:6px 10px;">저장</button>
         </div>
 
@@ -662,7 +658,7 @@
         <span class="section-lbl">장애물 목록</span>
         <div id="obs-list"></div>
         <div class="add-row" style="margin-top:8px;">
-          <input type="text" id="new-obs" placeholder="장애물 이름 (최대 8자)" maxlength="8" style="max-width:160px;" />
+          <input type="text" id="new-obs" placeholder="장애물 이름 (최대 8자)" maxlength="8" style="max-width:160px;">
           <button class="btn btn-secondary" id="btn-add-obs" style="padding:8px 16px; font-size:0.85rem;">추가</button>
         </div>
 
@@ -1288,6 +1284,7 @@
           fetch(CFG.gasUrl + '?' + params.toString()).catch(() => {});
         }
       };
+    }; // btn-register 핸들러 종료
 
     // Admin
     let adminOk = false;
@@ -1482,6 +1479,6 @@
     showScreen('s-intro');
     loop();
   </script>
-</body>
 
-</html>
+
+</body></html>
