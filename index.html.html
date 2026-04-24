@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0093)file:///C:/Users/user/Downloads/%EB%A7%88%EB%A5%B4%EC%BD%94%EC%9D%98%EC%97%AC%EC%A0%95_1.html -->
+<!-- saved from url=(0093)file:///C:/Users/user/Downloads/%EB%A7%88%EB%A5%B4%EC%BD%94%EC%9D%98%EC%97%AC%EC%A0%95_4.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -548,6 +548,12 @@
         <div class="score-big" id="final-score">0m</div>
         <div class="score-label">이동 거리</div>
 
+        <!-- 상위 5명 기록판 -->
+        <div id="leaderboard" style="margin-bottom:14px;">
+          <div style="font-size:0.75rem; color:#475569; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;">🏆 오늘의 상위 기록</div>
+          <div id="lb-rows"></div>
+        </div>
+
         <!-- E: 충돌 장벽 카드 -->
         <div id="hit-barrier-card" class="hidden" style="
           background: rgba(239,68,68,0.08);
@@ -872,6 +878,8 @@
         document.getElementById('inp-contact').value = '';
         document.getElementById('btn-register').disabled = false;
 
+        renderLeaderboard(meters);
+
         // E: 충돌 장벽 카드
         if (lastHitObs) {
           const meta = getObsMeta(lastHitObs);
@@ -1186,6 +1194,52 @@
       });
     }
 
+    function renderLeaderboard(myScore) {
+      const el = document.getElementById('lb-rows');
+      el.innerHTML = '<div style="color:#334155;font-size:0.82rem;text-align:center;padding:8px 0;">불러오는 중...</div>';
+
+      function drawRows(rows) {
+        const medals = ['🥇','🥈','🥉','4위','5위'];
+        if (!rows.length) {
+          el.innerHTML = '<div style="color:#334155;font-size:0.82rem;text-align:center;padding:6px 0;">아직 기록이 없어요</div>';
+          return;
+        }
+        el.innerHTML = rows.map((p, i) => {
+          const isMe = p.score === myScore && i === rows.findIndex(x => x.score === myScore);
+          return `<div style="
+            display:flex;align-items:center;gap:10px;
+            padding:7px 10px;border-radius:8px;margin-bottom:4px;
+            background:${isMe?'rgba(96,165,250,0.12)':'rgba(255,255,255,0.04)'};
+            border:1px solid ${isMe?'rgba(96,165,250,0.3)':'rgba(255,255,255,0.06)'};
+          ">
+            <span style="font-size:${i<3?'1.1rem':'0.82rem'};width:26px;text-align:center;">${medals[i]}</span>
+            <span style="flex:1;font-size:0.85rem;color:#94A3B8;">참여자</span>
+            <span style="font-size:0.9rem;font-weight:700;color:${isMe?'#60A5FA':'#F59E0B'};">${p.score}m</span>
+            ${isMe?'<span style="font-size:0.7rem;color:#60A5FA;">← 나</span>':''}
+          </div>`;
+        }).join('');
+      }
+
+      // 구글 시트에서 불러오기
+      if (CFG.gasUrl) {
+        fetch(CFG.gasUrl + '?action=leaderboard')
+          .then(r => r.json())
+          .then(data => {
+            if (data.ok && data.rows) drawRows(data.rows);
+            else drawRows([]);
+          })
+          .catch(() => {
+            // 실패 시 localStorage 폴백
+            const rows = [...PARTS].sort((a,b)=>b.score-a.score).slice(0,5);
+            drawRows(rows);
+          });
+      } else {
+        // GAS 미설정 시 localStorage 사용
+        const rows = [...PARTS].sort((a,b)=>b.score-a.score).slice(0,5);
+        drawRows(rows);
+      }
+    }
+
     function startGame() {
       showScreen(null);
       initGame();
@@ -1218,6 +1272,8 @@
     };
 
     document.getElementById('btn-register').onclick = () => {
+      const btn = document.getElementById('btn-register');
+      if (btn.disabled) return; // 중복 제출 방지
       const name     = document.getElementById('inp-name').value.trim();
       const district = document.getElementById('inp-district').value.trim();
       const contact  = document.getElementById('inp-contact').value.trim();
@@ -1225,6 +1281,7 @@
         document.getElementById('reg-err').classList.remove('hidden'); return;
       }
       document.getElementById('reg-err').classList.add('hidden');
+      btn.disabled = true; // 즉시 비활성화 (중복 제출 차단)
 
       const wonSoFar = PARTS.filter(p => p.won).length;
       const prob = wonSoFar >= CFG.winnerCount ? 0 : (CFG.winnerProb || 0) / 100;
@@ -1234,9 +1291,8 @@
       const entry = { name, district, contact, score: window._pendingScore || 0, time, won };
       PARTS.push(entry);
       saveParts(PARTS);
-      document.getElementById('btn-register').disabled = true;
 
-      // 구글 시트 전송 (GET + URLSearchParams)
+      // 구글 시트 전송
       if (CFG.gasUrl) {
         const params = new URLSearchParams({
           name:     entry.name,
@@ -1284,7 +1340,7 @@
           fetch(CFG.gasUrl + '?' + params.toString()).catch(() => {});
         }
       };
-    }; // btn-register 핸들러 종료
+    };
 
     // Admin
     let adminOk = false;
