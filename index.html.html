@@ -586,8 +586,14 @@
         <!-- 결과: 당첨 -->
         <div id="reg-result-win" class="hidden" style="text-align:center; padding:8px 0 4px;">
           <div style="font-size:2.6rem; margin-bottom:4px; animation:popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);">🎉</div>
-          <div style="font-size:1.3rem; font-weight:900; color:#F59E0B; margin-bottom:6px;">당첨되셨습니다!</div>
-          <div style="font-size:0.83rem; color:#94A3B8; margin-bottom:4px;">곧 연락드릴게요 😊</div>
+          <div style="font-size:1.3rem; font-weight:900; color:#F59E0B; margin-bottom:10px;">당첨되셨습니다!</div>
+          <div style="font-size:0.83rem; color:#94A3B8; margin-bottom:10px; text-align:left;">
+            경품 배달을 위해 상세 주소를 입력해주세요.
+          </div>
+          <input class="input-field" id="inp-delivery" placeholder="도로명 상세 주소 *" />
+          <div class="msg-err hidden" id="delivery-err">주소를 입력해주세요!</div>
+          <button class="btn btn-primary" id="btn-delivery" style="margin-bottom:0;">📍 주소 제출하기</button>
+          <div class="msg-ok hidden" id="delivery-ok">✅ 주소가 저장됐어요! 곧 연락드릴게요 😊</div>
         </div>
 
         <!-- 결과: 꽝 -->
@@ -1234,7 +1240,7 @@
       saveParts(PARTS);
       document.getElementById('btn-register').disabled = true;
 
-      // 구글 시트 전송 (GET + URLSearchParams — CORS 우회)
+      // 구글 시트 전송 (GET + URLSearchParams)
       if (CFG.gasUrl) {
         const params = new URLSearchParams({
           name:     entry.name,
@@ -1247,13 +1253,41 @@
         fetch(CFG.gasUrl + '?' + params.toString()).catch(() => {});
       }
 
+      // 배달주소 입력창 초기화
+      document.getElementById('inp-delivery').value = '';
+      document.getElementById('delivery-err').classList.add('hidden');
+      document.getElementById('delivery-ok').classList.add('hidden');
+      document.getElementById('btn-delivery').disabled = false;
+
       document.getElementById('reg-form').classList.add('hidden');
       if (won) {
         document.getElementById('reg-result-win').classList.remove('hidden');
+        document.getElementById('reg-result-lose').classList.add('hidden');
       } else {
+        document.getElementById('reg-result-win').classList.add('hidden');
         document.getElementById('reg-result-lose').classList.remove('hidden');
       }
-    };
+
+      // 배달주소 제출
+      document.getElementById('btn-delivery').onclick = () => {
+        const addr = document.getElementById('inp-delivery').value.trim();
+        if (!addr) { document.getElementById('delivery-err').classList.remove('hidden'); return; }
+        document.getElementById('delivery-err').classList.add('hidden');
+        document.getElementById('btn-delivery').disabled = true;
+        document.getElementById('delivery-ok').classList.remove('hidden');
+        if (CFG.gasUrl) {
+          const params = new URLSearchParams({
+            action:   'address',
+            name:     entry.name,
+            district: entry.district,
+            contact:  entry.contact,
+            score:    entry.score,
+            time:     entry.time,
+            addr,
+          });
+          fetch(CFG.gasUrl + '?' + params.toString()).catch(() => {});
+        }
+      };
 
     // Admin
     let adminOk = false;
